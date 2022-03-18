@@ -39,14 +39,16 @@ class Project(models.Model):
 
         filename, file_extension = os.path.splitext(
             instance.path)  # Разбиваем абсолютный путь на имя файла и расширение
-        clean_name = filename.split('\\')[-1]  # Узнаем чисто имя файла без разрешения
-        nw_name = filename[:filename.rfind('\\')] + '\\' + 'resize\\' + str(clean_name) + str(
-            name)  # С помощью фукции rfind находим последнее положение символа \\ и добавляем 'resize' + имя фото + дополнительные символы "preview@2x" и тд
-        folder_resize = filename[:filename.rfind(
-            '\\')] + '\\' + 'resize\\'  # Создаем путь для создания папки resize в папке media
-        # Создаем папку resize, если ее нет
+
         try:
-            os.mkdir(folder_resize)
+            clearname = filename[(filename.rfind('\\')) + 1:len(filename)]
+        except:
+            clearname = filename[filename.rfind('/'):len(filename)]
+        name = clearname + name
+        nw_name = os.path.join('media', 'resize', name)
+        resize = os.path.join('media', 'resize')
+        try:
+            os.mkdir(os.path.abspath(resize))
         except:
             pass
         save_path = nw_name + '.' + (str(extension)).lower()  # Путь для сохранения ресайза фото + расширение
@@ -76,7 +78,7 @@ class Project(models.Model):
     id_category = models.ForeignKey('Category', on_delete=models.CASCADE, verbose_name='Категория')
     id_view = models.ForeignKey('View', on_delete=models.CASCADE, verbose_name='Вид')
     id_teamlist = models.ManyToManyField('Team', blank=True, related_name='projects', verbose_name='Принимали участие')
-    p_organization = models.CharField(max_length=350, verbose_name='Организация', default=None)
+    p_organization = models.CharField(max_length=350, verbose_name='Организация', default=None, blank=True)
     p_description = models.TextField(verbose_name='Кратко о проекте')
     p_i_did = models.TextField(verbose_name='Что было сделано мной')
     p_img = models.ImageField(verbose_name='Фото png 920x600')
@@ -86,7 +88,7 @@ class Project(models.Model):
     p_img_large_webp = models.JSONField(null=True, blank=True)
     p_link = models.CharField(max_length=255, verbose_name='Ссылка на проект')
     skills = models.ManyToManyField('Skills', related_name='project', verbose_name='Использовал технологии')
-    p_git = models.CharField(max_length=255, verbose_name='Ссылка на репозиторий', default=None)
+    p_git = models.CharField(max_length=255, verbose_name='Ссылка на репозиторий', blank=True, default=None)
     p_sorting = models.IntegerField(verbose_name='Сортировка', default=0)
     p_status = models.BooleanField(verbose_name='Показать', default=True)
 
@@ -98,8 +100,7 @@ class Project(models.Model):
         # Проверяем наличие фото, если есть фото, то проверяем было ли оно уже в базе, если нет-то выполняем ресайз
         if self.p_img:
             if self.__original_name.name != self.p_img.name:
-                super(Project, self).save(
-                    update_fields=["p_img"])  # Если фото новое,то сохраняем только поле изображения
+                super().save(*args, **kwargs)  # Если фото новое,то сохраняем только поле изображения
                 webp_preview = self.make_resize(self.p_img, extension='webp',
                                                 resolution=preview_webp)  # Выполняем ресайз формата webp для превью
                 webp_detailed = self.make_resize(self.p_img, extension='webp',
