@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.forms import ModelForm
 from django.utils.safestring import mark_safe
 from .models import *
 
@@ -34,12 +35,21 @@ class ProjectAdmin(admin.ModelAdmin):
     class Meta:
         model = Project
 
+class SkillsAdminForm(ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['s_img'].help_text = mark_safe(
+            '<span style ="color:red;font-size: 14px;">Загружайте изображение в формате svg</span>')
+
+
+class SkillsAdmin(admin.ModelAdmin):
+    form = SkillsAdminForm
 
 
 admin.site.register(Category)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(View)
-admin.site.register(Skills)
+admin.site.register(Skills,SkillsAdmin)
 admin.site.register(Team)
 admin.site.register(CatSkill)
