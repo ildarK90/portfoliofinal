@@ -49,13 +49,19 @@ class ProjectSerializer(serializers.ModelSerializer):
         webp_list = []
         if type(instance.p_img_large_webp) is dict:
             for i in instance.p_img_large_webp.values():
-                my_str = str(i).replace('\\', '/')
-                webp_list.append(my_str)
+                if '\\' in i:
+                    my_str = str(i).replace('\\', '/')
+                    webp_list.append(my_str)
+                else:
+                    webp_list.append(i)
         png_list = []
         if type(instance.p_img_large_png) is dict:
             for i in instance.p_img_large_png.values():
-                my_str = str(i).replace('\\', '/')
-                png_list.append(my_str)
+                if '\\' in i:
+                    my_str = str(i).replace('\\', '/')
+                    png_list.append(my_str)
+                else:
+                    png_list.append(i)
         img = {}
         img['png'] = png_list
         img['webp'] = webp_list
@@ -91,13 +97,19 @@ class ProjectDet(serializers.ModelSerializer):
         webp_list = []
         if type(instance.p_img_large_webp) is dict:
             for i in instance.p_img_large_webp.values():
-                my_str = str(i).replace('\\', '/')
-                webp_list.append(my_str)
+                if '\\' in i:
+                    my_str = str(i).replace('\\', '/')
+                    webp_list.append(my_str)
+                else:
+                    webp_list.append(i)
         png_list = []
         if type(instance.p_img_large_png) is dict:
             for i in instance.p_img_large_png.values():
-                my_str = str(i).replace('\\', '/')
-                png_list.append(my_str)
+                if '\\' in i:
+                    my_str = str(i).replace('\\', '/')
+                    png_list.append(my_str)
+                else:
+                    png_list.append(i)
         img = {}
         img['png'] = png_list
         img['webp'] = webp_list
