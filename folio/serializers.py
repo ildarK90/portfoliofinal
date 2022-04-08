@@ -48,7 +48,9 @@ class ProjectSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         webp_list = []
         if type(instance.p_img_large_webp) is dict:
+            print(instance.p_img_large_webp)
             for i in instance.p_img_large_webp.values():
+                print(i)
                 if '\\' in i:
                     my_str = str(i).replace('\\', '/')
                     webp_list.append(my_str)
@@ -56,6 +58,7 @@ class ProjectSerializer(serializers.ModelSerializer):
                     webp_list.append(i)
         png_list = []
         if type(instance.p_img_large_png) is dict:
+            print(instance.p_img_large_png)
             for i in instance.p_img_large_png.values():
                 if '\\' in i:
                     my_str = str(i).replace('\\', '/')
@@ -97,6 +100,7 @@ class ProjectDet(serializers.ModelSerializer):
         webp_list = []
         if type(instance.p_img_large_webp) is dict:
             for i in instance.p_img_large_webp.values():
+                print(i)
                 if '\\' in i:
                     my_str = str(i).replace('\\', '/')
                     webp_list.append(my_str)
