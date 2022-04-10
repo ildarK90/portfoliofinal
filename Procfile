@@ -1,1 +1,1 @@
-web: gunicorn portfolio.wsgi --log-file -
+web: gunicorn portfolio.wsgi --timeout 60 --log-file -

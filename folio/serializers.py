@@ -42,14 +42,15 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['id_project', 'category', 'p_name', 'p_link', 'img']
+        fields = ['id_project', 'category', 'p_name', 'p_link', 'img','p_img_preview_png','p_img_preview_webp']
+        # fields = '__all__'
 
     def get_image(self, instance):
         request = self.context.get('request')
         webp_list = []
-        if type(instance.p_img_large_webp) is dict:
-            print(instance.p_img_large_webp)
-            for i in instance.p_img_large_webp.values():
+        if type(instance.p_img_preview_webp) is dict:
+            print(instance.p_img_preview_webp)
+            for i in instance.p_img_preview_webp.values():
                 print(i)
                 if '\\' in i:
                     my_str = str(i).replace('\\', '/')
@@ -57,9 +58,9 @@ class ProjectSerializer(serializers.ModelSerializer):
                 else:
                     webp_list.append(i)
         png_list = []
-        if type(instance.p_img_large_png) is dict:
-            print(instance.p_img_large_png)
-            for i in instance.p_img_large_png.values():
+        if type(instance.p_img_preview_png) is dict:
+            print(instance.p_img_preview_png)
+            for i in instance.p_img_preview_png.values():
                 if '\\' in i:
                     my_str = str(i).replace('\\', '/')
                     png_list.append(my_str)

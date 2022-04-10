@@ -72,6 +72,8 @@ class Project(models.Model):
                                         name=thumbnail[2])  # Производим ресайз для каждого фото, всего 6 ресайзов
             gallery[thumbnail[
                 2]] = thumb  # Добавляем в словарь в качестве ключа дополнительное название файла и в качестве значения относительный путь к ресайзу
+            print(thumbnail[2])
+        print('Выводим json с ресайзом',gallery)
         return gallery
 
     p_name = models.CharField(max_length=255, verbose_name='Имя проекта')
