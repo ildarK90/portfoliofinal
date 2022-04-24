@@ -2,6 +2,7 @@ from django.forms import model_to_dict
 from rest_framework import serializers
 from .models import *
 from operator import itemgetter
+from collections import OrderedDict
 
 
 class CatSkillSerializer(serializers.ModelSerializer):
@@ -21,7 +22,8 @@ class CatSkillSerializer(serializers.ModelSerializer):
             skills['s_name'] = i.s_name
             skills['s_description'] = i.s_description
             if i.s_img:
-                skills['s_img'] = i.s_img.url
+                s_img = i.s_img.url[i.s_img.url.find('/')+1:len(i.s_img.url)]
+                skills['s_img'] = str(s_img)
             else:
                 skills['s_img'] = None
             skills['s_quantity'] = i.s_quantity
@@ -30,7 +32,7 @@ class CatSkillSerializer(serializers.ModelSerializer):
             skilli.append(skills)
             # skilli.sort(key=lambda x: x.id_skill)
             skilli = sorted(skilli, key=itemgetter('s_sorting'), reverse=False)
-            print(skilli)
+
 
         return skilli
 
@@ -42,16 +44,16 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['id_project', 'category', 'p_name', 'p_link', 'img','p_img_preview_png','p_img_preview_webp']
-        # fields = '__all__'
+        fields = ['id_project', 'category', 'p_name', 'p_link', 'img']
+
 
     def get_image(self, instance):
+        order_keys = ['-preview', '-preview@2x', '-preview@3x', '-preview-xl', '-preview-xl@2x', '-preview-xl@3x']
         request = self.context.get('request')
         webp_list = []
         if type(instance.p_img_preview_webp) is dict:
-            print(instance.p_img_preview_webp)
-            for i in instance.p_img_preview_webp.values():
-                print(i)
+            sorted_dict = dict(OrderedDict([(el, instance.p_img_preview_webp[el]) for el in order_keys]))
+            for i in sorted_dict.values():
                 if '\\' in i:
                     my_str = str(i).replace('\\', '/')
                     webp_list.append(my_str)
@@ -59,8 +61,8 @@ class ProjectSerializer(serializers.ModelSerializer):
                     webp_list.append(i)
         png_list = []
         if type(instance.p_img_preview_png) is dict:
-            print(instance.p_img_preview_png)
-            for i in instance.p_img_preview_png.values():
+            sorted_dict = dict(OrderedDict([(el, instance.p_img_preview_png[el]) for el in order_keys]))
+            for i in sorted_dict.values():
                 if '\\' in i:
                     my_str = str(i).replace('\\', '/')
                     png_list.append(my_str)
@@ -69,7 +71,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         img = {}
         img['png'] = png_list
         img['webp'] = webp_list
-        print(img)
+
         return img
 
 
@@ -89,19 +91,22 @@ class ProjectDet(serializers.ModelSerializer):
         link_list = []
         for i in instance.id_teamlist.all():
             teama = {}
-            print(i.b_name)
             teama['b_name'] = i.b_name
             teama['b_link'] = i.b_link
+            teama['b_post'] = i.b_post
+
             link_list.append(teama)
 
         return link_list
 
     def get_image(self, instance):
+        order_keys = ['', '@2x', '@3x', '-xl', '-xl@2x', '-xl@3x']
         request = self.context.get('request')
         webp_list = []
         if type(instance.p_img_large_webp) is dict:
-            for i in instance.p_img_large_webp.values():
-                print(i)
+            sorted_dict = dict(OrderedDict([(el, instance.p_img_large_webp[el]) for el in order_keys]))
+            for i in sorted_dict.values():
+
                 if '\\' in i:
                     my_str = str(i).replace('\\', '/')
                     webp_list.append(my_str)
@@ -109,7 +114,8 @@ class ProjectDet(serializers.ModelSerializer):
                     webp_list.append(i)
         png_list = []
         if type(instance.p_img_large_png) is dict:
-            for i in instance.p_img_large_png.values():
+            sorted_dict = dict(OrderedDict([(el, instance.p_img_large_png[el]) for el in order_keys]))
+            for i in sorted_dict.values():
                 if '\\' in i:
                     my_str = str(i).replace('\\', '/')
                     png_list.append(my_str)

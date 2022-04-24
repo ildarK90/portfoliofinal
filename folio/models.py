@@ -4,8 +4,8 @@ from django.urls import reverse
 import os
 from PIL import Image
 
-API = 'CgTgDvB2gwNbLmksS3Mjm55hS7MQ4HbP'
-tinify.key = 'CgTgDvB2gwNbLmksS3Mjm55hS7MQ4HbP'
+API = 'yPnptfy8hjVP6f0Y0vC7mbdwT4hPZfJs'
+tinify.key = 'yPnptfy8hjVP6f0Y0vC7mbdwT4hPZfJs'
 
 preview_webp = [(400, 260, '-preview'), (800, 520, '-preview@2x'),
                 (1200, 780, '-preview@3x'), (491, 325, '-preview-xl'),
@@ -72,8 +72,6 @@ class Project(models.Model):
                                         name=thumbnail[2])  # Производим ресайз для каждого фото, всего 6 ресайзов
             gallery[thumbnail[
                 2]] = thumb  # Добавляем в словарь в качестве ключа дополнительное название файла и в качестве значения относительный путь к ресайзу
-            print(thumbnail[2])
-        print('Выводим json с ресайзом',gallery)
         return gallery
 
     p_name = models.CharField(max_length=255, verbose_name='Имя проекта')
@@ -137,7 +135,7 @@ class Project(models.Model):
 class Team(models.Model):
     b_name = models.CharField(max_length=250, verbose_name='Имя')
     b_post = models.CharField(max_length=250, verbose_name='Специальность')
-    b_link = models.CharField(max_length=250, verbose_name='Ссылка на Github', blank=True)
+    b_link = models.CharField(max_length=250, verbose_name='Ссылка на Github')
 
     def __str__(self):
         return self.b_name
