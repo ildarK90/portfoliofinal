@@ -6,7 +6,6 @@ urlpatterns = [
     path('api/projects/', ProjectList.as_view()),
     path('api/projects/<int:pk>', ProjectDetailed.as_view()),
     path('api/catskill/',CatSkiList.as_view()),
-    path('sendmail/', messagesend, name='mail'),
     path('sendemail/', Sendemail.as_view(), name='email')
 ]
 

@@ -1,19 +1,10 @@
-import json
-
-import requests
-from django.core.mail.backends.smtp import EmailBackend
-from django.http import HttpResponse, JsonResponse, HttpResponseServerError
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.generics import RetrieveAPIView, get_object_or_404
 from django.core.mail import send_mail
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from .models import *
 from rest_framework import generics, status
 from .serializers import *
-from .forms import *
-from django.shortcuts import render
+
 
 
 class ProjectList(generics.ListCreateAPIView):
@@ -51,42 +42,6 @@ class ProjectDetailed(RetrieveAPIView):
             'id_category').select_related('id_view')
 
 
-# def messagesend(request):
-#
-#     if request.method == 'POST':
-#         form = MailForm(request.POST)
-#         if form.is_valid():
-#             name = request.POST['name']
-#             email = request.POST['email']
-#             message = request.POST['message']
-#             message = 'Письмо от ' + email + '\n' + message
-#             send_mail(
-#                 name,
-#                 message,
-#                 'abraklionchik@gmail.com',
-#                 ['ildar.light@yandex.ru']
-#             )
-#     else:
-#         form = MailForm
-#     return render(request, 'mail.html',{'form': form})
-#     # return render(request,'mail.html', {'form':form})
-
-@csrf_exempt
-def messagesend(request):
-    name = request.data.get('name')
-    email = request.data.get('email')
-    message = request.data.get('message')
-    message = 'Письмо от ' + name + '\n' + email + '\n' + message
-    send_mail(
-        name,
-        message,
-        'abraklionchik@gmail.com',
-        ['ildar.light@yandex.ru']
-    )
-    return HttpResponse('OK')
-    # return render(request,'mail.html', {'form':form})
-
-
 class Sendemail(APIView):
     def post(self,request):
         # text = request.data.get('text')
@@ -104,18 +59,4 @@ class Sendemail(APIView):
         return Response({"answer": "Письмо отправлено"}, status=status.HTTP_201_CREATED)
 
 
-# @csrf_exempt
-# def messagesend(request):
-#
-#     name = request.GET.get('name')
-#     email = request.GET.get('email')
-#     message = request.GET.get('message')
-#     message = 'Письмо от ' + email + '\n' + message
-#     send_mail(
-#         name,
-#         message,
-#         'abraklionchik@gmail.com',
-#         ['abraklion@gmail.com']
-#     )
-#     return HttpResponse('OK')
-#     # return render(request,'mail.html', {'form':form})
+
